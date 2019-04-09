@@ -1,0 +1,11 @@
+benchmarks/results
+test-output/
+.*
+!/.gitignore
+!/.scalafmt.conf
+out/
+*.log
+.DS_Store
+target/
+/.lib/
+.classpath
