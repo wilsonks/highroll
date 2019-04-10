@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<GridPane xmlns:fx="http://javafx.com/fxml"
+          fx:controller="game.teenpatti.Dealer"
+          xmlns="http://javafx.com/javafx">
+
+    <Label fx:id="gameId"/>
+    <Button fx:id="start" text="START GAME"/>
+</GridPane>

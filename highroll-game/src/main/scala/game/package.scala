@@ -1,5 +1,6 @@
 package object game {
 
-  type Chips = Int
+  type Chips = BigDecimal
+  type GameId = Int
   type Time = Long
 }

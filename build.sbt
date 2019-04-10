@@ -2,12 +2,20 @@ lazy val highroll = project
   .in(file("."))
   .settings(sharedSettings)
   .settings(doNotPublishArtifact)
-  .aggregate(`highroll-game`)
+  .aggregate(`highroll-game`, `teenpatti-table`)
 
 lazy val `highroll-game` = project
   .settings(crossSettings)
   .settings(libraryDependencies += "co.fs2" %% "fs2-core" % "1.0.4")
   .settings(libraryDependencies += "com.tykhe.deck" %% "deck-device" % "2.0.0")
+
+lazy val `teenpatti-table` = project
+  .settings(addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  .settings(crossSettings)
+  .dependsOn(`highroll-game`)
+  .settings(libraryDependencies += "com.tykhe.fxml" %% "fxml-desktop" % "1.7.1")
+  .settings(libraryDependencies += "com.tykhe.fxml" %% "fxml-driver" % "1.7.1")
+  .settings(libraryDependencies += "com.tykhe.fxml" %% "fxml-extras" % "1.7.1")
 
 lazy val universalSettings = Seq(
   // basic settings

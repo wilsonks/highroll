@@ -4,7 +4,9 @@ package teenpatti
 
 import deck.Card.Stock
 
-sealed abstract class Table extends Product with Serializable
+sealed abstract class Table extends Product with Serializable {
+  def game: GameId
+}
 
 sealed abstract class TableCommand extends Product with Serializable
 
@@ -14,23 +16,21 @@ object Table {
 
   type Transition = (Table, TableEvent)
 
-  sealed abstract class Gaming extends Table {
-    def game: GameId
-  }
+  sealed abstract class Dealing extends Table
 
-  final case class Started(game: GameId) extends Gaming
+  final case class Opened(game: GameId) extends Dealing
 
-  final case class Drawing(game: GameId, turn: List[Player]) extends Gaming
+  final case class Started(game: GameId) extends Dealing
 
-  final case object Opened extends Table
+  final case class Drawing(game: GameId, turn: List[Player]) extends Dealing
 
-  final case object Closed extends Table
+  final case class Closed(game: GameId) extends Table
 
-  object Gaming {
+  object Dealing {
 
     def unapply(arg: Table): Option[GameId] = arg match {
-      case g: Gaming => Some(g.game)
-      case _         => None
+      case table: Dealing => Some(table.game)
+      case _              => None
     }
   }
 }
@@ -41,7 +41,7 @@ object TableCommand {
     def game: GameId
   }
 
-  final case class CloseBetting(game: GameId) extends GameCommand
+  final case class StartDraw(game: GameId) extends GameCommand
 
   final case class CompleteGame(game: GameId) extends GameCommand
 
@@ -49,7 +49,7 @@ object TableCommand {
 
   final case class VoidGame(game: GameId) extends GameCommand
 
-  final case object OpenBetting extends TableCommand
+  final case object StartGame extends TableCommand
 
   final case object OpenTable extends TableCommand
 
@@ -63,11 +63,11 @@ object TableEvent {
     def game: GameId
   }
 
-  final case class CommandRejected(command: TableCommand, rejections: List[Dealer.Rejection]) extends TableEvent
+  final case class CommandRejected(command: TableCommand, errors: List[TableFactory.Error]) extends TableEvent
 
-  final case class BettingOpened(game: GameId) extends GameEvent
+  final case class GameStarted(game: GameId) extends GameEvent
 
-  final case class BettingClosed(game: GameId) extends GameEvent
+  final case class DrawStarted(game: GameId) extends GameEvent
 
   final case class CardAssigned(game: GameId, player: String, card: Stock) extends GameEvent
 

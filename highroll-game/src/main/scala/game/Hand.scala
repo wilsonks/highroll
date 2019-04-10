@@ -1,14 +1,12 @@
 package game
 
-package teenpatti
-
 import deck.Card.Stock
 
-final case class Player(name: String, cards: List[Stock] = Nil)
+sealed abstract class Hand(val rank: Int) extends Product with Serializable with Ordered[Hand] {
+  def compare(that: Hand): Int = rank.compare(that.rank)
+}
 
-object Player {
-
-  def score(player: Player): Score = score(player.cards)
+object Hand {
 
   def score(cards: List[Stock]): Score = {
     val size = cards.size
@@ -38,11 +36,7 @@ object Player {
 
     def value: Int
 
-    override def compare(that: Score): Chips = (hand, value).compare((that.hand, that.value))
-  }
-
-  sealed abstract class Hand(val rank: Int) extends Product with Serializable with Ordered[Hand] {
-    def compare(that: Hand): Int = rank.compare(that.rank)
+    override def compare(that: Score): Int = (hand, value).compare((that.hand, that.value))
   }
 
   case class HighCard(value: Int) extends Score(HighCard)
